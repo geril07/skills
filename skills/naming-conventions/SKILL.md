@@ -31,7 +31,11 @@ Names should reflect their scope. Use the shortest name that's clear in context.
 
 ```dot
 digraph naming {
-  "Naming something?" -> "Does it cross a file or module boundary?" [label="start"];
+  "Does it cross a file or module boundary?" [shape=diamond];
+  "Would the local name be ambiguous at the import site?" [shape=diamond];
+  "Use local filename as name" [shape=box];
+  "Add scope prefix to the name" [shape=box];
+
   "Does it cross a file or module boundary?" -> "Use local filename as name" [label="no"];
   "Does it cross a file or module boundary?" -> "Would the local name be ambiguous at the import site?" [label="yes"];
   "Would the local name be ambiguous at the import site?" -> "Use local filename as name" [label="no"];
