@@ -14,6 +14,8 @@ Names should reflect their scope. Use the shortest name that's clear in context.
 1. **Prefer local filenames** — use the shortest clear name within a file's own scope
 2. **Prefer scoped exported names** — add context when an export will be used outside its file or module
 
+**Note:** Export names reflect domain scope, not filename casing. A file `dashboard.tsx` in the `home/` directory exports `Dashboard` locally and `HomeDashboard` when scope is needed — the name comes from the domain concept, not the kebab-case filename.
+
 ## Quick Reference
 
 | File | Local (inside file) | Scoped (exported, cross-boundary) |
@@ -21,7 +23,7 @@ Names should reflect their scope. Use the shortest name that's clear in context.
 | `users/schema.ts` | `schema` | `userSchema` |
 | `reports/query.ts` | `query` | `buildReportQuery` |
 | `orders/types.ts` | `Filters` | `OrderFilters` |
-| `pages/Home/Dashboard.tsx` | `Dashboard` | `HomeDashboard` (only when broader usage needs context) |
+| `pages/home/dashboard.tsx` | `Dashboard` | `HomeDashboard` (only when broader usage needs context) |
 | `shared/formatting/date.ts` | `formatDate` | `formatDate` (already scoped by verb+domain) |
 | `shared/storage/session.ts` | `readSession` | `readSession` (already scoped) |
 | `shared/validation/email.ts` | `emailSchema` | `emailSchema` (already scoped) |
