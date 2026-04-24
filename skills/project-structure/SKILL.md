@@ -1,6 +1,6 @@
 ---
 name: project-structure
-description: Use when adding, moving, or importing files and modules — enforces layer dependencies and module boundary rules
+description: Use when adding, moving, or importing files and modules; enforces layer dependencies and module boundary rules
 ---
 
 # Project Structure
@@ -35,55 +35,73 @@ app/ -> pages/ -> modules/ -> shared/
 | `pages/` | `modules/`, `shared/` |
 | `modules/` | `shared/`, other modules' **public API only** |
 | `shared/` | Other files within `shared/` only |
-| `globals/` | Not imported — ambient only |
+| `globals/` | Ambient only; not imported |
 
 **Violations:**
-- `shared/` importing from `app/`, `pages/`, or `modules/` → **forbidden**
-- `pages/` importing from `app/` → **forbidden**
-- `modules/foo` importing internal files of `modules/bar` → **forbidden** (use `modules/bar`'s public API)
+- `shared/` importing from `app/`, `pages/`, or `modules/` is **forbidden**
+- `pages/` importing from `app/` is **forbidden**
+- `modules/foo` importing internal files of `modules/bar` is **forbidden** (use `modules/bar`'s public API)
 
 ## Module Boundaries
 
-- Import from modules only through their **public API** (the module's index/barrel file)
+- Import from modules only through their **public API** (usually the module's `index.ts` entrypoint)
 - Do not import from internal module files across module boundaries
 - Modules may depend on other modules when really needed, but only through public API
-
-Each module exposes a public API through its index/barrel file:
-
-```txt
-modules/users/index.ts
-modules/roles/index.ts
-```
 
 Allowed:
 
 ```ts
-import { UserCard } from "@/modules/users";
+import { userSchema } from "@/modules/users";
 ```
 
 Forbidden:
 
 ```ts
-import { UserCard } from "@/modules/users/components/UserCard";
+import { userSchema } from "@/modules/users/schemas/user";
+```
+
+## Shared Entry Points
+
+Shared subfolders do not need an `index.ts`/barrel by default. Add a small scoped entrypoint only when the folder represents a cohesive primitive or package-like scope.
+
+Good scoped entrypoint:
+
+```ts
+import { Table } from "@/shared/table";
+```
+
+Good direct import:
+
+```ts
+import { formatDate } from "@/shared/date/formatDate";
+```
+
+Avoid broad catch-all barrels:
+
+```ts
+import { formatDate, Table, cn } from "@/shared";
 ```
 
 ## Grouping Recommendation
 
 Prefer **scope-based grouping** over type-based grouping when files belong to the same concern:
 
-```
+```txt
+Prefer:
+shared/table/{schemas,types,constants}.ts
+
+Avoid:
 shared/schemas/table.ts + shared/types/table.ts
-→ shared/table/{schemas,types,constants}.ts
 ```
 
 Type-based grouping inside an already clear scope is fine:
-```
-modules/users/{types,schemas}  ✓
+```txt
+modules/users/{types.ts,schemas.ts}
 ```
 
 ## Example Structure
 
-```
+```txt
 src/
   app/
     main.tsx
@@ -111,10 +129,13 @@ src/
     assets/
     ui/
     table/
+      index.ts
+      Table.tsx
     date/
+      formatDate.ts
 ```
 
-## Red Flags — STOP and Reconsider
+## Red Flags
 
 - Importing from `app/` outside of `app/`
 - Importing an internal path from another module (e.g., `modules/users/internal/helpers`)
