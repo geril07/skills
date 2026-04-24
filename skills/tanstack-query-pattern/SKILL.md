@@ -48,7 +48,7 @@ Rules:
 
 ## Disabled Queries
 
-Use `skipToken` only when a query must exist before all required params are available.
+Use `skipToken` only when a query is called before all required params are available.
 
 ```ts
 import { queryOptions, skipToken } from "@tanstack/react-query";
@@ -71,7 +71,7 @@ Notes:
 
 Use `{ ...arg }` only when missing args and empty filters should intentionally become the same key shape.
 
-Default:
+Default key preserves the arg value:
 
 ```ts
 queryKey: ["listTodos", arg] as const;
@@ -83,7 +83,7 @@ Normalized only when intended:
 queryKey: ["listTodos", { ...arg }] as const;
 ```
 
-This means:
+The normalized form intentionally collapses these inputs:
 
 ```ts
 undefined -> {}
@@ -163,7 +163,7 @@ Rules:
 
 1. Start with a `queryOptions` or `mutationOptions` factory.
 2. Use a single object arg when params exist.
-3. Use `queryKey: ["name", arg]` unless there is a reason not to.
+3. Use `queryKey: ["name", arg]` as the default key shape.
 4. Add `skipToken` only when disabled behavior is required.
 5. Add `{ ...arg }` only when empty/missing args should normalize to the same object key shape.
 6. Add scoped keys only when broad invalidation or cache operations need prefix matching.
