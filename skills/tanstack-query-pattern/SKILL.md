@@ -7,9 +7,7 @@ description: Use when writing or refactoring TanStack Query queries, mutations, 
 
 ## Overview
 
-Use `queryOptions` and `mutationOptions` factories as the source of truth for TanStack Query configuration. Keep query keys explicit, stable, and only as structured as the invalidation use cases require.
-
-Prefer the smallest correct key shape. Add disabled behavior, key normalization, or broad invalidation scopes only when the query actually needs them.
+Use `queryOptions` and `mutationOptions` factories as the source of truth for TanStack Query configuration. Prefer the smallest correct query key shape, and add disabled behavior, key normalization, or broad invalidation scopes only when the query actually needs them.
 
 ## Query Factories
 
@@ -45,9 +43,8 @@ Rules:
 
 1. Use one object argument when a query has params.
 2. Type the arg inline for small shapes; extract a type when reused or large.
-3. Do not add key scopes like `"list"` or `"detail"` by default.
-4. Do not include implementation names like `"QueryOptions"` in query keys.
-5. Reuse `queryOptions(...).queryKey` for exact query operations such as `setQueryData`, `getQueryData`, `prefetchQuery`, and exact invalidation.
+3. Do not include implementation names like `"QueryOptions"` in query keys.
+4. Reuse `queryOptions(...).queryKey` for exact query operations such as `setQueryData`, `getQueryData`, `prefetchQuery`, and exact invalidation.
 
 ## Disabled Queries
 
@@ -72,7 +69,7 @@ Notes:
 
 ## Key Normalization
 
-Do not use `{ ...arg }` by default. Use it only when missing args and empty filters should intentionally become the same key shape.
+Use `{ ...arg }` only when missing args and empty filters should intentionally become the same key shape.
 
 Default:
 
@@ -80,7 +77,7 @@ Default:
 queryKey: ["listTodos", arg] as const;
 ```
 
-Use normalization only when this equivalence is intended:
+Normalized only when intended:
 
 ```ts
 queryKey: ["listTodos", { ...arg }] as const;
@@ -131,8 +128,6 @@ client.invalidateQueries({
 });
 ```
 
-Do not add `"list"`, `"detail"`, or similar segments unless there is an operation that benefits from that scope.
-
 ## Mutation Factories
 
 Prefer `mutationOptions` factories as the mutation source of truth.
@@ -177,9 +172,5 @@ Rules:
 ## Red Flags
 
 - Hard-coded query keys duplicated across queries and mutations
-- Query keys containing implementation suffixes like `QueryOptions`
-- Defaulting every key to `['resource', 'list', params]` without broad list operations
-- Using `{ ...arg }` just to make a key seem stable
 - Passing `undefined` into a query that should not be disabled
-- Calling `refetch()` on a `skipToken` query and expecting it to fetch
 - Large mutation `onSuccess` blocks with repeated invalidation details
