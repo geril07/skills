@@ -23,22 +23,22 @@ Code is organized into layers with strict dependency rules. Respecting these lay
 
 Dependencies flow **downward only**:
 
+```txt
+app/ -> pages/ -> modules/ -> shared/
 ```
-app/ → pages/ → modules/ → shared/
-                          ↓
-                       globals/ (ambient, not imported)
-```
+
+`globals/` is ambient-only. Do not import from it directly.
 
 | From | Can import from |
 |------|----------------|
 | `app/` | `pages/`, `modules/`, `shared/` |
 | `pages/` | `modules/`, `shared/` |
 | `modules/` | `shared/`, other modules' **public API only** |
-| `shared/` | Nothing outside `shared/` |
+| `shared/` | Other files within `shared/` only |
 | `globals/` | Not imported — ambient only |
 
 **Violations:**
-- `shared/` importing from `modules/` or `app/` → **forbidden**
+- `shared/` importing from `app/`, `pages/`, or `modules/` → **forbidden**
 - `pages/` importing from `app/` → **forbidden**
 - `modules/foo` importing internal files of `modules/bar` → **forbidden** (use `modules/bar`'s public API)
 
@@ -47,6 +47,25 @@ app/ → pages/ → modules/ → shared/
 - Import from modules only through their **public API** (the module's index/barrel file)
 - Do not import from internal module files across module boundaries
 - Modules may depend on other modules when really needed, but only through public API
+
+Each module exposes a public API through its index/barrel file:
+
+```txt
+modules/users/index.ts
+modules/roles/index.ts
+```
+
+Allowed:
+
+```ts
+import { UserCard } from "@/modules/users";
+```
+
+Forbidden:
+
+```ts
+import { UserCard } from "@/modules/users/components/UserCard";
+```
 
 ## Grouping Recommendation
 
@@ -69,25 +88,30 @@ src/
   app/
     main.tsx
     router/
-    query/
-    styles/
     providers/
+    styles/
   pages/
-    Roles/
-    Todos/
+    roles/
+      page.tsx
+    todos/
+      page.tsx
   modules/
     auth/
+      index.ts
     session/
+      index.ts
     users/
+      index.ts
     roles/
+      index.ts
     todos/
+      index.ts
   shared/
     api/
     assets/
-    components/
-    hooks/
-    utils/
-    types/
+    ui/
+    table/
+    date/
 ```
 
 ## Red Flags — STOP and Reconsider
@@ -95,5 +119,5 @@ src/
 - Importing from `app/` outside of `app/`
 - Importing an internal path from another module (e.g., `modules/users/internal/helpers`)
 - Putting domain logic in `shared/`
-- `shared/` file importing from `modules/`
+- `shared/` file importing from `app/`, `pages/`, or `modules/`
 - Adding a file that doesn't fit any layer's purpose
