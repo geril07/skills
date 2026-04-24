@@ -82,21 +82,35 @@ Avoid broad catch-all barrels:
 import { formatDate, Table, cn } from "@/shared";
 ```
 
-## Grouping Recommendation
+## Grouping
 
-Prefer **scope-based grouping** over type-based grouping when files belong to the same concern:
+Prefer flat, scope-based grouping. Keep related files together under the smallest meaningful scope, and add subfolders only when the scope becomes too large to scan.
+
+Prefer:
 
 ```txt
-Prefer:
-shared/table/{schemas,types,constants}.ts
-
-Avoid:
-shared/schemas/table.ts + shared/types/table.ts
+shared/table/
+  Table.tsx
+  columns.ts
+  schema.ts
+  constants.ts
 ```
 
-Type-based grouping inside an already clear scope is fine:
+Avoid splitting one concern across type buckets:
+
 ```txt
-modules/users/{types.ts,schemas.ts}
+shared/components/Table.tsx
+shared/schemas/table.ts
+shared/constants/table.ts
+```
+
+Type-based files are fine inside an already clear scope when they describe that scope:
+
+```txt
+modules/users/
+  index.ts
+  schema.ts
+  types.ts
 ```
 
 ## Example Structure
