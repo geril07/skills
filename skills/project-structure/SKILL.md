@@ -1,23 +1,25 @@
 ---
 name: project-structure
-description: Use when adding, moving, or importing files and modules; enforces role-based layer dependencies and module boundary rules
+description: Use when adding, moving, or importing files and modules; keeps project source organized by role and enforces dependency boundaries
 ---
 
 # Project Structure
 
 ## Overview
 
-Code is organized by architectural role, not by framework-specific folder names. Each project should map its folders to these roles, then follow the dependency rules. Respecting these roles keeps modules decoupled and the codebase navigable.
+Organize source code by project role, not by framework-specific folder names. Before creating, moving, or importing a file, identify its role and keep dependencies flowing from outer entrypoints toward inner reusable code.
+
+This skill governs source layout and imports. It does not prescribe repository config, package manager files, CI, deployment setup, or framework-specific conventions.
 
 ## Roles
 
 | Role | Purpose |
 |------|---------|
-| `bootstrap` | App startup, providers, routers, runtime singletons, app-wide wiring. Nothing outside bootstrap imports from it. |
-| `routes` | Route, screen, controller, or endpoint composition. Glues modules and shared code into user-facing or API-facing entrypoints. |
-| `modules` | Business/domain code. Each module is a cohesive domain slice. |
-| `shared` | Generic primitives and technical building blocks. Move things to `modules` once they become domain-specific. |
-| `globals` | Ambient constants or types injected through `globalThis`, `window`, or similar. Not imported directly. |
+| `bootstrap` | Project startup and runtime wiring: providers, routers, dependency setup, process or app entrypoints. Nothing outside bootstrap imports from it. |
+| `routes` | User-facing or API-facing composition: routes, screens, pages, controllers, handlers, or endpoints. Glues modules and shared code into entrypoints. |
+| `modules` | Business/domain slices. Each module owns a cohesive area of behavior, rules, data access, and domain-specific UI. |
+| `shared` | Generic primitives and technical building blocks reusable across domains. Move code to `modules` once it becomes domain-specific. |
+| `globals` | Ambient declarations or values exposed through `globalThis`, `window`, or similar runtime globals. Not imported directly. |
 
 ## Dependency Rules
 
@@ -28,6 +30,8 @@ bootstrap -> routes -> modules -> shared
 ```
 
 `globals` is ambient-only. Do not import from it directly.
+
+Folder names are project-specific. Apply these rules by the role a file plays, not by the literal folder name.
 
 | From | Can import from |
 |------|----------------|
@@ -115,14 +119,15 @@ modules/users/
 
 ## Example Structure
 
+One possible source layout:
+
 ```txt
 src/
-  app/
-    main.tsx
-    router/
-    providers/
-    styles/
-  pages/
+  bootstrap/
+    main.ts
+    router.ts
+    providers.ts
+  routes/
     roles/
       page.tsx
     todos/
@@ -149,12 +154,11 @@ src/
       formatDate.ts
 ```
 
-In this example, `src/app/` is the bootstrap role, `src/pages/` is the routes role, `src/modules/` is the modules role, and `src/shared/` is the shared role. Other projects may use different folder names for the same roles.
-
 ## Red Flags
 
 - Importing from bootstrap code outside of bootstrap
 - Importing an internal path from another module (e.g., `modules/users/internal/helpers`)
 - Putting domain logic in `shared`
 - `shared` file importing from bootstrap, routes, or modules
+- Putting business rules directly in routes instead of composing modules
 - Adding a file without identifying its architectural role
