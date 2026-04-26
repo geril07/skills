@@ -1,45 +1,45 @@
 ---
 name: project-structure
-description: Use when adding, moving, or importing files and modules; enforces layer dependencies and module boundary rules
+description: Use when adding, moving, or importing files and modules; enforces role-based layer dependencies and module boundary rules
 ---
 
 # Project Structure
 
 ## Overview
 
-Code is organized into layers with strict dependency rules. Respecting these layers keeps modules decoupled and the codebase navigable.
+Code is organized by architectural role, not by framework-specific folder names. Each project should map its folders to these roles, then follow the dependency rules. Respecting these roles keeps modules decoupled and the codebase navigable.
 
-## Layers
+## Roles
 
-| Layer | Purpose |
-|-------|---------|
-| `app/` | Bootstrap, providers, router, runtime singletons, app-wide wiring. Nothing outside `app/` imports from it. |
-| `pages/` | Route/screen composition layer. Glues modules and shared code into viewable screens. |
-| `modules/` | Business/domain code. Each module is a cohesive domain slice. |
-| `shared/` | Generic primitives and technical building blocks. Move things to `modules/` once they become domain-specific. |
-| `globals/` | Ambient constants or types injected through `globalThis`, `window`, or similar. Not imported directly. |
+| Role | Purpose |
+|------|---------|
+| `bootstrap` | App startup, providers, routers, runtime singletons, app-wide wiring. Nothing outside bootstrap imports from it. |
+| `routes` | Route, screen, controller, or endpoint composition. Glues modules and shared code into user-facing or API-facing entrypoints. |
+| `modules` | Business/domain code. Each module is a cohesive domain slice. |
+| `shared` | Generic primitives and technical building blocks. Move things to `modules` once they become domain-specific. |
+| `globals` | Ambient constants or types injected through `globalThis`, `window`, or similar. Not imported directly. |
 
 ## Dependency Rules
 
 Dependencies flow **downward only**:
 
 ```txt
-app/ -> pages/ -> modules/ -> shared/
+bootstrap -> routes -> modules -> shared
 ```
 
-`globals/` is ambient-only. Do not import from it directly.
+`globals` is ambient-only. Do not import from it directly.
 
 | From | Can import from |
 |------|----------------|
-| `app/` | `pages/`, `modules/`, `shared/` |
-| `pages/` | `modules/`, `shared/` |
-| `modules/` | `shared/`, other modules' **public API only** |
-| `shared/` | Other files within `shared/` only |
-| `globals/` | Ambient only; not imported |
+| `bootstrap` | `routes`, `modules`, `shared` |
+| `routes` | `modules`, `shared` |
+| `modules` | `shared`, other modules' **public API only** |
+| `shared` | Other files within `shared` only |
+| `globals` | Ambient only; not imported |
 
 **Violations:**
-- `shared/` importing from `app/`, `pages/`, or `modules/` is **forbidden**
-- `pages/` importing from `app/` is **forbidden**
+- `shared` importing from `bootstrap`, `routes`, or `modules` is **forbidden**
+- `routes` importing from `bootstrap` is **forbidden**
 - `modules/foo` importing internal files of `modules/bar` is **forbidden** (use `modules/bar`'s public API)
 
 ## Module Boundaries
@@ -149,10 +149,12 @@ src/
       formatDate.ts
 ```
 
+In this example, `src/app/` is the bootstrap role, `src/pages/` is the routes role, `src/modules/` is the modules role, and `src/shared/` is the shared role. Other projects may use different folder names for the same roles.
+
 ## Red Flags
 
-- Importing from `app/` outside of `app/`
+- Importing from bootstrap code outside of bootstrap
 - Importing an internal path from another module (e.g., `modules/users/internal/helpers`)
-- Putting domain logic in `shared/`
-- `shared/` file importing from `app/`, `pages/`, or `modules/`
-- Adding a file that doesn't fit any layer's purpose
+- Putting domain logic in `shared`
+- `shared` file importing from bootstrap, routes, or modules
+- Adding a file without identifying its architectural role
