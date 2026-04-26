@@ -1,9 +1,9 @@
 ---
-name: codebase-structure
+name: layered-modular-layout
 description: Use when adding, moving, or importing files and modules; keeps codebase source organized by role and enforces dependency boundaries
 ---
 
-# Codebase Structure
+# Layered Modular Layout
 
 ## Overview
 
