@@ -1,13 +1,13 @@
 ---
-name: project-structure
-description: Use when adding, moving, or importing files and modules; keeps project source organized by role and enforces dependency boundaries
+name: codebase-structure
+description: Use when adding, moving, or importing files and modules; keeps codebase source organized by role and enforces dependency boundaries
 ---
 
-# Project Structure
+# Codebase Structure
 
 ## Overview
 
-Organize source code by project role, not by framework-specific folder names. Before creating, moving, or importing a file, identify its role and keep dependencies flowing from outer entrypoints toward inner reusable code.
+Organize source code by codebase role, not by framework-specific folder names. Before creating, moving, or importing a file, identify its role and keep dependencies flowing from outer entrypoints toward inner reusable code.
 
 This skill governs source layout and imports. It does not prescribe repository config, package manager files, CI, deployment setup, or framework-specific conventions.
 
