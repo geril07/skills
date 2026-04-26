@@ -16,7 +16,7 @@ This skill governs source layout and imports. It does not prescribe repository c
 | Role | Purpose |
 |------|---------|
 | `bootstrap` | Project startup and runtime wiring: providers, routers, dependency setup, process or app entrypoints. Nothing outside bootstrap imports from it. |
-| `routes` | User-facing or API-facing composition: routes, screens, pages, controllers, handlers, or endpoints. Glues modules and shared code into entrypoints. |
+| `routes` | User-facing or API-facing composition: routes, screens, pages, route handlers, endpoint adapters, or framework bindings. |
 | `modules` | Business/domain slices. Each module owns a cohesive area of behavior, rules, data access, and domain-specific UI. |
 | `shared` | Generic primitives and technical building blocks reusable across domains. Move code to `modules` once it becomes domain-specific. |
 | `globals` | Ambient declarations or values exposed through `globalThis`, `window`, or similar runtime globals. Not imported directly. |
