@@ -1,17 +1,27 @@
 ---
 name: naming-conventions
-description: Use when creating, renaming, or refactoring identifiers, exports, or file names — enforces naming conventions based on file location and export scope
+description: Enforces naming conventions for identifiers, exports, and file names based on location and export scope. Use when creating, renaming, or refactoring identifiers, exports, or file names.
 ---
 
 # Naming Conventions
 
-## Overview
+## Quick start
 
 Names should reflect their scope. Use the shortest name that's clear in context. Add scope when code crosses a module boundary, or when a same-module cross-file name would be ambiguous at the import site.
 
 For this skill, a module is a domain or package boundary, not just a file. A name crosses a module boundary when it is exported from a public module entrypoint, imported from another domain/module, or exposed to external consumers.
 
-## Rules
+```ts
+// Before: ambiguous cross-module export
+export const schema = z.object({...})
+
+// After: self-scoped, clear at the import site
+export const userSchema = z.object({...})
+```
+
+## Workflows
+
+### Rules
 
 1. **Inside a file** — use the shortest clear name (no prefix)
 2. **Across module boundaries** — exports must carry domain scope unless the name is already self-scoped
@@ -26,14 +36,16 @@ Use casing appropriate to the identifier kind: `userSchema` for values/functions
 
 **Default exports** undermine naming conventions because they defer the name to every import site. Prefer named exports so the export site controls the canonical name.
 
-## Decision Order
+### Decision Order
 
 1. If the name is already self-scoped for the relevant domain, use it.
 2. If it crosses a module boundary, add domain scope.
 3. If it stays inside one file, use the shortest clear name.
 4. If it crosses files within the same module, add scope only when the name would be ambiguous at the import site.
 
-## Common Mistakes
+## Advanced features
+
+### Common Mistakes
 
 | Mistake                                                                       | Fix                                                                               |
 | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |

@@ -1,13 +1,13 @@
 ---
 name: brainstorming
-description: Use before creative work, new features, behavior changes, components, or ambiguous implementation requests to turn an idea into an approved design before coding.
+description: Guides structured brainstorming to turn ideas into approved designs before implementation. Use when the user wants to plan creative work, new features, behavior changes, components, or ambiguous implementation requests.
 ---
 
 # Brainstorming
 
-## Overview
+## Quick start
 
-Turn an idea into a clear, approved design before implementation. Use the smallest process that resolves the important decisions: understand the context, ask focused questions, compare viable approaches, and get explicit approval before writing code.
+When the user wants to add a new feature, first inspect the relevant files and existing patterns. Then ask one focused clarifying question at a time, compare 2-3 viable approaches with tradeoffs, recommend the best one, and get explicit approval before writing any code.
 
 ## When To Use
 
@@ -35,7 +35,7 @@ Turn an idea into a clear, approved design before implementation. Use the smalle
 6. Keep the process as small as the task allows.
 7. If a question can be answered by inspecting the codebase, inspect the codebase instead of asking the user.
 
-## Workflow
+## Workflows
 
 1. Explore context: inspect relevant files, docs, and existing patterns when applicable.
 2. Summarize what is already known in a few sentences.
@@ -46,39 +46,6 @@ Turn an idea into a clear, approved design before implementation. Use the smalle
 7. Present the design at the right level of detail for the task.
 8. Ask the user to approve or revise the design.
 9. After approval, ask whether to proceed with implementation.
-
-## Question Strategy
-
-Resolve decisions in dependency order:
-
-1. Goal: what problem are we solving?
-2. Users: who is this for?
-3. Success criteria: what must be true when this is done?
-4. Scope: what is included and excluded?
-5. Constraints: technical, UX, performance, security, compatibility, or timeline limits.
-6. Behavior: what should happen in the main path and edge cases?
-7. Integration: where should this fit in the existing system?
-8. Verification: how will we know it works?
-
-Prefer questions that make progress:
-
-- Ask about decisions that affect the design.
-- Avoid asking for information already available in the codebase.
-- Offer concrete choices instead of open-ended prompts when practical.
-- Include a recommendation so the user can accept, reject, or adjust it quickly.
-
-## Approach Comparison
-
-Before presenting the final design, compare 2-3 viable approaches.
-
-For each approach, cover:
-
-- What it is
-- Why it might be good
-- Main tradeoff or risk
-- When it would be the right choice
-
-Lead with the recommended approach unless another ordering makes the tradeoff clearer.
 
 ## Design Approval Gate
 
@@ -105,12 +72,6 @@ Default output is an approved design in chat.
 
 Write a spec file only when the user explicitly requests it. Do not commit anything unless the user explicitly asks.
 
-## Red Flags
+## Advanced features
 
-- Starting implementation before the design is approved
-- Asking broad questions that do not resolve a decision
-- Skipping project exploration when existing code should answer the question
-- Treating a large multi-system idea as one small feature
-- Leaving success criteria vague
-- Presenting only one approach when real alternatives exist
-- Adding documentation or process that is heavier than the task needs
+See [REFERENCE.md](REFERENCE.md) for detailed question strategies, approach comparison templates, and red flags.
