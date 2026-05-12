@@ -131,7 +131,8 @@ type AddTodoVariables = {
 
 export const addTodoMutationOptions = () =>
   mutationOptions({
-    mutationFn: ({ name, userId }: AddTodoVariables) => addTodo({ name, userId }),
+    mutationFn: ({ name, userId }: AddTodoVariables) =>
+      addTodo({ name, userId }),
     onSuccess: (_data, variables, _onMutateResult, { client }) => {
       return client.invalidateQueries({
         queryKey: listTodosQueryOptions({ userId: variables.userId }).queryKey,

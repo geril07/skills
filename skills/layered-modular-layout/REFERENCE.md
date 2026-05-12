@@ -2,13 +2,13 @@
 
 ## Roles
 
-| Role | Purpose |
-|------|---------|
+| Role        | Purpose                                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `bootstrap` | Project startup and runtime wiring: providers, routers, dependency setup, process or app entrypoints. Nothing outside bootstrap imports from it. |
-| `routes` | User-facing or API-facing composition: routes, screens, pages, route handlers, endpoint adapters, or framework bindings. |
-| `modules` | Business/domain slices. Each module owns a cohesive area of behavior, rules, data access, and domain-specific UI. |
-| `shared` | Generic primitives and technical building blocks reusable across domains. Move code to `modules` once it becomes domain-specific. |
-| `globals` | Ambient declarations or values exposed through `globalThis`, `window`, or similar runtime globals. Not imported directly. |
+| `routes`    | User-facing or API-facing composition: routes, screens, pages, route handlers, endpoint adapters, or framework bindings.                         |
+| `modules`   | Business/domain slices. Each module owns a cohesive area of behavior, rules, data access, and domain-specific UI.                                |
+| `shared`    | Generic primitives and technical building blocks reusable across domains. Move code to `modules` once it becomes domain-specific.                |
+| `globals`   | Ambient declarations or values exposed through `globalThis`, `window`, or similar runtime globals. Not imported directly.                        |
 
 ## Dependency Rules
 
@@ -22,15 +22,16 @@ bootstrap -> routes -> modules -> shared
 
 Folder names are project-specific. Apply these rules by the role a file plays, not by the literal folder name.
 
-| From | Can import from |
-|------|----------------|
-| `bootstrap` | `routes`, `modules`, `shared` |
-| `routes` | `modules`, `shared` |
-| `modules` | `shared`, other modules' **public API only** |
-| `shared` | Other files within `shared` only |
-| `globals` | Ambient only; not imported |
+| From        | Can import from                              |
+| ----------- | -------------------------------------------- |
+| `bootstrap` | `routes`, `modules`, `shared`                |
+| `routes`    | `modules`, `shared`                          |
+| `modules`   | `shared`, other modules' **public API only** |
+| `shared`    | Other files within `shared` only             |
+| `globals`   | Ambient only; not imported                   |
 
 **Violations:**
+
 - `shared` importing from `bootstrap`, `routes`, or `modules` is **forbidden**
 - `routes` importing from `bootstrap` is **forbidden**
 - `modules/foo` importing internal files of `modules/bar` is **forbidden** (use `modules/bar`'s public API)
