@@ -2,8 +2,6 @@
 
 ## Query Factories
 
-Define reusable `queryOptions` factories next to the domain API they represent.
-
 Default shape for a query with params:
 
 ```ts
